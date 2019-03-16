@@ -1,0 +1,19 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+using namespace std;
+bool IsInteger(char c) {
+	if ((int)c > 47 && (int)c < 58)
+		return true;
+	return false;
+}
+int main() {
+	string input_s, find_s;
+	cin >> input_s >> find_s;
+	input_s.erase(remove_if(input_s.begin(), input_s.end(), IsInteger), input_s.end());	
+	if (input_s.find(find_s) == -1)
+		cout << "0";
+	else
+		cout << "1";
+	return 0;
+}

@@ -1,0 +1,13 @@
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+int main() {	
+	int n, m, result;
+	cin >> n >> m;
+	result = n - 1 + n * (m - 1);
+	cout << result << endl;
+
+	return 0;
+}

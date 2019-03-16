@@ -1,0 +1,24 @@
+#include <iostream>
+
+using namespace std;
+
+int main() {	
+	int sugar = 0, x = 0, y, bag3, bag5;
+	cin >> sugar;
+	bag3 = sugar / 3;
+	bag5 = sugar / 5;
+	for (x = 0; x < sugar / 5 + 1; x++) {		
+		for (y = 0; y < sugar / 3 + 1; y++) {
+			if (5 * x + 3 * y == sugar && x + y < bag5 + bag3) {
+				bag5 = x;
+				bag3 = y;
+			}
+		}
+	}
+	if (5 * bag5 + 3 * bag3 == sugar)
+		cout << bag5 + bag3;
+	else 
+		cout << -1;
+
+	return 0;
+}

@@ -1,0 +1,33 @@
+#include <iostream>
+using namespace std;
+unsigned int combination(int n, int r) {
+	if (r == n || r == 0)
+		return 1;
+	if (r == 1)
+		return n;
+	return combination(n - 1, r - 1) + combination(n - 1, r);
+}
+double calc(int goal_num, int probability) {
+	double p = (double)probability / 100;
+	double success = 1, fail = 1;
+	for (int i = 0; i < goal_num; i++) {
+		success *= p;
+	}
+	for (int i = 0; i < 18 - goal_num; i++)
+		fail *= 1 - p;	
+	return combination(18, goal_num)*success*fail;
+}
+int main() {
+	int a, b;
+	bool prime[19] = { 0,0,1,1,0,1,0,1,0,0,0,1,0,1,0,0,0,1,0 };
+	double pa[19], pb[19];
+	double not_prime_a = 0, not_prime_b = 0;
+	cin >> a >> b;
+	for (int i = 0; i < 19; i++) {
+		if (!prime[i]) {
+			not_prime_a += calc(i, a);
+			not_prime_b += calc(i, b);
+		}
+	}
+	cout << 1 - (not_prime_a * not_prime_b);
+}

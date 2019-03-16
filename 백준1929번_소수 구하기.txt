@@ -1,0 +1,27 @@
+#include <cstdio>
+#include <iostream>
+
+using namespace std;
+
+bool arr[1000001];
+int main() {
+	int M, N;
+	cin >> M >> N;
+	
+	for (int i = 1; i <= 1000000; i++) {
+		if (i == 1)
+			arr[i] = true;
+		else if (arr[i] != true) {
+			for (int j = 2 * i; j <= 1000000; j += i) {
+				arr[j] = true;
+			}
+		}
+	}
+
+	for (int i = M; i <= N; i++) {
+		if (!arr[i])
+			printf("%d\n", i);
+	}
+
+	return 0;
+}

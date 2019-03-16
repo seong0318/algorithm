@@ -1,0 +1,17 @@
+#include <iostream>
+using namespace std;
+
+int main() {
+	int people, m, n, round = 1;
+
+	cin >> people >> m >> n;
+	
+	while ((m + 1) / 2 != (n + 1) / 2) {
+		m = (m + 1) / 2;
+		n = (n + 1) / 2;
+		round++;
+	}
+	cout << round;
+
+	return 0;
+}

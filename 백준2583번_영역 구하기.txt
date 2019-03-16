@@ -1,0 +1,121 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+int area = 0;
+class Point {
+private:
+	bool exist;
+	bool pass;
+public:
+	Point() {
+		exist = false;
+		pass = false;
+	}
+	Point(bool nexist, bool npass) {
+		exist = nexist;
+		pass = npass;
+	}
+	bool getExist() {
+		return exist;
+	}
+	bool getPass() {
+		return pass;
+	}
+	void setExist(bool nexist) {
+		exist = nexist;
+	}
+	void setPass(bool npass) {
+		pass = npass;
+	}
+};
+/*	제대로 좌표에 입력되었는지 확인하는 함수들
+void display(vector<vector<Point>> coordinate) {
+	cout << "squre" << endl;
+	for (int i = 0; i < coordinate.size(); i++) {
+		for (int j = 0; j < coordinate[i].size(); j++)
+			cout << coordinate[i][j].getExist() << "";
+		cout << endl;
+	}
+}
+
+void display_pass(vector<vector<Point>> coordinate) {
+	cout << endl << "pass" << endl;
+	for (int i = 0; i < coordinate.size(); i++) {
+		for (int j = 0; j < coordinate[i].size(); j++)
+			cout << coordinate[i][j].getPass() << "";
+		cout << endl;
+	}
+}
+*/
+void calc(vector<vector<Point>> &coordinate, int xpos, int ypos) {
+	//display_pass(coordinate);
+	//cout << "xpos = " << xpos << " ypos = " << ypos << endl;
+
+	if (ypos == coordinate.size() || xpos == coordinate[ypos].size()) {		
+		return;
+	}
+	
+	if (!coordinate[ypos][xpos].getExist() && !coordinate[ypos][xpos].getPass()) {
+		coordinate[ypos][xpos].setPass(true);
+		area++;
+		calc(coordinate, xpos, ypos + 1);
+		calc(coordinate, xpos + 1, ypos);
+		if (ypos > 0)
+			calc(coordinate, xpos, ypos - 1);
+		if (xpos > 0)
+			calc(coordinate, xpos - 1, ypos);
+	}
+}
+
+int main() {
+	int m, n, num_square, num_empty = 0;
+	vector<vector<Point>> coordinate;
+	vector<int> arr;
+
+	cin >> m >> n >> num_square;
+	for (int i = 0; i < m; i++) {
+		vector<Point> arr;
+		for (int j = 0; j < n; j++) {
+			Point *element = new Point();
+			arr.push_back(*element);
+		}
+		coordinate.push_back(arr);
+	}
+	for (int i = 0; i < num_square; i++) {
+		int x0, y0, x1, y1;
+		cin >> x0 >> y0 >> x1 >> y1;
+		for (int j = y0; j < y1; j++) {
+			for (int k = x0; k < x1; k++) {				
+				coordinate[coordinate.size() - j - 1][k].setExist(true);
+			}
+		}
+	}
+	//display(coordinate);
+
+	for (int i = 0; i < coordinate.size(); i++) {
+		for (int j = 0; j < coordinate[i].size(); j++) {
+			calc(coordinate, j, i);
+			if (area != 0) {
+				num_empty++;
+				arr.push_back(area);
+				area = 0;
+			}
+		}
+	}
+
+	cout << num_empty << endl;
+	sort(arr.begin(), arr.end());
+	for (int i = 0; i < arr.size(); i++)
+		cout << arr[i] << " ";
+		
+	// 메모리 해제
+	for (int i = 0; i < coordinate.size(); i++) {
+		for (int j = 0; j < coordinate[i].size(); j++)
+			coordinate[j].clear();
+	}
+	arr.clear();
+
+	return 0;
+}

@@ -1,0 +1,29 @@
+#include <iostream>
+#include <algorithm>
+using namespace std;
+int dist[101][101];
+int main() {	
+	int num_city, num_bus;
+	cin >> num_city >> num_bus;
+	for (int i = 0; i < num_city; i++) {
+		for (int j = 0; j < num_city; j++)
+			i == j ? dist[i][j] = 0 : dist[i][j] = 1e9;
+	}
+	while(num_bus--) {
+		int col, row, cost;
+		cin >> col >> row >> cost;
+		dist[col - 1][row - 1] = min(dist[col - 1][row - 1], cost);
+	}
+	for (int k = 0; k < num_city; k++) {
+		for (int i = 0; i < num_city; i++) {
+			for (int j = 0; j < num_city; j++) 
+				dist[i][j] = min(dist[i][k] + dist[k][j], dist[i][j]);
+		}
+	}
+	for (int i = 0; i < num_city; i++) {
+		for (int j = 0; j < num_city; j++) 
+			cout << (dist[i][j] == 1e9 ? 0 : dist[i][j]) << ' ';
+		cout << endl;
+	}
+	return 0;
+}

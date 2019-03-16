@@ -1,0 +1,51 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+vector<vector<int>> node;
+int *Match_laptop;
+bool *visited;
+bool matching(int man_index) {
+	if (visited[man_index - 1])
+		return false;
+	visited[man_index - 1] = true;
+	for (auto adj_laptop : node[man_index - 1]) {
+		int person_connected_laptop = Match_laptop[adj_laptop - 1];
+		if (person_connected_laptop == -1 || matching(person_connected_laptop)) {
+			Match_laptop[adj_laptop - 1] = man_index;
+			return true;
+		}
+	}
+	return false;
+}
+
+int main() {
+	int man_num, expect_num, result = 0;
+	cin >> man_num >> expect_num;
+	node.resize(man_num);
+	Match_laptop = (int*)malloc(sizeof(int)*man_num);
+	visited = (bool*)malloc(sizeof(bool)*man_num);
+	for (int i = 0; i < man_num; i++) 
+		Match_laptop[i] = -1;	// ½ÇÁ¦ laptop index - 1	
+
+	for (int i = 0; i < expect_num; i++) {
+		int man_index, laptop_index;
+		cin >> man_index >> laptop_index;
+		node[man_index - 1].push_back(laptop_index);
+	}
+
+	for (int i = 1; i <= node.size(); i++) {
+		for (int i = 0; i < man_num; i++)
+			visited[i] = false;
+		if (matching(i))
+			result++;
+	}
+
+	cout << result << endl;
+
+	for (int i = 0; i < node.size(); i++)
+		node[i].clear();
+	node.clear();
+	free(Match_laptop);
+	free(visited);
+	return 0;
+}

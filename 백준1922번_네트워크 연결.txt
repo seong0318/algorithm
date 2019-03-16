@@ -1,0 +1,68 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+struct edge {
+	int start, end, cost;
+	edge(int n1, int n2, int n3) :start(n1), end(n2), cost(n3) {};
+	bool operator >(const edge &other) const {
+		return cost > other.cost;
+	}
+};
+vector<edge> list;
+int *root;
+int *tree_depth;
+int find(int n) {
+	if (root[n] == n)
+		return n;
+	else
+		return root[n] = find(root[n]);
+}
+bool merge(int start, int end) {
+	int start_root = find(start);
+	int end_root = find(end);
+	if (start_root == end_root)
+		return false;
+	if (tree_depth[start_root] < tree_depth[end_root]) {
+		root[start_root] = end_root;
+	}
+	else {
+		root[end_root] = start_root;
+		if (tree_depth[start_root] == tree_depth[end_root])
+			tree_depth[start_root]++;
+	}
+	return true;
+}
+int kruskal(int vertex_num) {
+	int edge_num = vertex_num - 1, result = 0;
+	sort(list.begin(), list.end(), greater<edge>());
+	while (edge_num) {
+		edge here = list.back();
+		list.pop_back();
+		if (merge(here.start, here.end)) {
+			result += here.cost;
+			edge_num--;
+		}
+	}
+	return result;
+}
+int main() {
+	int n, m;
+	cin >> n >> m;
+	root = new int[n + 1];
+	tree_depth = new int[n + 1];
+	for (int i = 0; i < n + 1; i++) {
+		root[i] = i;
+		tree_depth[i] = 0;
+	}
+	while (m--) {
+		int start, end, cost;
+		cin >> start >> end >> cost;
+		list.push_back(edge(start, end, cost));
+	}
+	cout << kruskal(n);
+	list.clear();
+	free(root);
+	free(tree_depth);
+	return 0;
+}

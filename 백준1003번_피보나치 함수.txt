@@ -1,0 +1,36 @@
+#include <iostream>
+using namespace std;
+
+int fibo[50][2] = { {1,0},{0,1}, };
+
+int  num_call(int column, int row) {
+	if (column < 2)
+		return fibo[column][row];
+
+	if (fibo[column][row]) {
+		return fibo[column][row];
+	}
+	else {
+		fibo[column][row] = num_call(column - 1, row) + num_call(column - 2, row);
+		return fibo[column][row];
+	}
+}
+
+int main() {
+	int num, *input;
+
+	cin >> num;
+	input = (int*)malloc(sizeof(int)*num);
+	for (int i = 0; i < num; i++) {
+		int temp;
+		cin >> temp;
+		input[i] = temp;
+		num_call(temp, 0);
+		num_call(temp, 1);
+	}
+	for (int i = 0; i < num; i++) {
+		cout << fibo[input[i]][0] << " " << fibo[input[i]][1] << endl;
+	}
+	free(input);
+	return 0;
+}

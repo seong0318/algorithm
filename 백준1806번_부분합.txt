@@ -1,0 +1,41 @@
+#include <iostream>
+using namespace std;
+
+int main() {
+	int num, find, *arr, s = 0, e = 0, sum = 0, size;
+	bool same = false;
+
+	cin >> num >> find;
+	arr = (int*)malloc(sizeof(int)*num);
+	size = num;
+
+	for (int i = 0; i < num; i++) {
+		int temp;
+		cin >> temp;
+		arr[i] = temp;
+	}
+	while (1) {
+		if (sum < find) {
+			if (e == num)
+				break;
+			//cout << "s = " << s << " e = " << e << " sum = " << sum << " size = " << size << endl;
+			sum += arr[e++];
+		}
+		else if (sum >= find) {
+			//cout << "s = " << s << " e = " << e << " sum = " << sum << " size = " << size << endl;
+			if (e - s < size)
+				size = e - s;
+			same = true;
+			sum -= arr[s++];
+		}
+		else if (s == e)
+			break;
+	}
+	if (same)
+		cout << size << endl;
+	else
+		cout << "0" << endl;
+
+	free(arr);
+	return 0;
+}

@@ -1,0 +1,20 @@
+#include <iostream>
+#include <algorithm>
+using namespace std;
+int main() {	
+	int card_num;
+	int *cost;
+	cin >> card_num;
+	cost = (int*)malloc(sizeof(int)*card_num);
+	for (int i = 0; i < card_num; i++)
+		cin >> cost[i];
+	for (int i = 1; i < card_num; i++) {
+		for (int j = 0; j < i / 2 + 1; j++) {
+			if (i % 2 == 0 && j == i / 2)
+				continue;
+			cost[i] = max(cost[i], cost[j] + cost[i - 1 - j]);
+		}
+	}
+	cout << cost[card_num - 1] << endl;
+	return 0;
+}

@@ -1,0 +1,88 @@
+#include <iostream>
+#include <queue>
+#include <vector>
+#include <limits>
+using namespace std;
+
+class Graph {
+private:
+	vector<vector<int>> adj;
+public:	
+	Graph(int size) {
+		adj.assign(size*size, vector<int>());
+	}
+	~Graph() {
+		for (int i = 0; i < adj.size(); i++)
+			adj[i].clear();
+		adj.clear();
+	}
+	void add_elem(int index) {
+		adj[index].push_back(index);
+	}
+	void add_elem(int start, int end) {
+		adj[start].push_back(end);
+		adj[end].push_back(start);
+	}	
+	vector<vector<int>> *get_adj() {
+		return &adj;
+	}
+};
+
+void Dijkstra(Graph *g) {
+	priority_queue<int, vector<int>, greater<int>> pq;
+	int *dist;			// 각 vertex간 최소 비용
+	int num_vertex = g->get_adj()->size();
+	dist = (int*)malloc(sizeof(int)*num_vertex);
+	for (int i = 0; i < num_vertex; i++) {
+		dist[i] = numeric_limits<int>::max();
+	}
+	dist[0] = g->get_adj()->at(0).at(0);
+	pq.push(0);
+	while (!pq.empty()) {
+		int vertex = pq.top();
+		pq.pop();
+		for (int i = 1; i < g->get_adj()->at(vertex).size(); i++) {
+			int linked_vertex = g->get_adj()->at(vertex).at(i);
+			int min_dist = dist[vertex] + g->get_adj()->at(linked_vertex).at(0);			
+			if (min_dist < dist[linked_vertex]) {
+				pq.push(linked_vertex);
+				dist[linked_vertex] = min_dist;		// 새로 계산한게 기존 것보다 작을 경우
+			}
+		}
+	}
+	cout << dist[num_vertex - 1] << endl;
+
+	free(dist);
+}
+
+int main() {
+	int size, numOfinput = 1;
+
+	while (1) {
+		int input_line = 0;
+		cin >> size;
+		if (size == 0)
+			break;
+		Graph *g = new Graph(size);
+		while (input_line < size) {
+			for (int i = 0; i < size; i++) {
+				int temp, index = input_line * size + i;
+				cin >> temp;
+				g->add_elem(index);
+				g->get_adj()->at(index).at(0) = temp;
+				if (index > size * input_line && index < size*(input_line + 1)) 
+					g->add_elem(index, index - 1);					
+				if (input_line > 0)
+					g->add_elem(index, index - size);
+			}
+			input_line++;
+		}
+		cout << "Problem " << numOfinput << ": ";
+		Dijkstra(g);
+
+		numOfinput++;
+		delete(g);
+	}
+
+	return 0;
+}

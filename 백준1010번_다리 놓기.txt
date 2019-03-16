@@ -1,0 +1,42 @@
+#include <cstdio>
+using namespace std;
+int calc(int arr[][31], int N, int M) {
+	if (arr[N][M] != 0) {
+		return arr[N][M];
+	}
+	else if (N > M || N == 0 || M == 0) {
+		arr[N][M] = 0;
+		return 0;
+	}
+	else if (N == 1) {
+		arr[N][M] = M;
+		return M;
+	}
+	else if (N == M) {
+		arr[N][M] = 1;
+		return 1;
+	}	
+	else {
+		int result = 0;
+		for (int i = M - 1; i >= N - 1; i--) {
+			result += calc(arr, N - 1, i);
+			arr[N][M] = result;
+		}
+		return result;
+	}
+}
+int main() {
+	int num, arr[31][31] = { 0, };
+	scanf("%d", &num);
+	for (int i = 0; i < 31; i++) {
+		for (int j = 0; j < 31; j++) {
+			calc(arr, i, j);
+		}
+	}
+	for (int i = 0; i < num; i++) {		
+		int N, M;
+		scanf("%d %d", &N, &M);
+		printf("%d\n", arr[N][M]);
+	}
+	return 0;
+}

@@ -1,0 +1,28 @@
+#include <iostream>
+
+using namespace std;
+
+int main() {	
+	int input_num;
+	int result = 0;
+	int temp;
+
+	cin >> input_num;
+	
+	for (int i = 1; i < input_num; i++) {
+		temp = i;
+		while (temp != 0) {
+			result = result + temp % 10;
+			temp = temp / 10;
+		}
+		if (input_num == result + i) {
+			cout << i << endl;
+			return 0;
+		}
+		result = 0;
+	}	
+
+	cout << "0" << endl;
+
+	return 0;
+}

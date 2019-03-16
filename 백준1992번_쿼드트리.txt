@@ -1,0 +1,53 @@
+#include <iostream>
+#include <cstdio>
+
+using namespace std;
+
+bool same(int **arr, int size, int x, int y) {
+	for (int i = x; i < x + size - 1; i++) {
+		for (int j = y; j < y + size - 1; j++) {
+			if (arr[i][j] == arr[i][j + 1] && arr[i][j] == arr[i + 1][j] && arr[i][j] == arr[i + 1][j + 1]) {
+				continue;
+			}
+			else {
+				return false;
+			}
+		}
+	}
+	return true;
+}
+
+void calc(int **arr, int size, int x, int y) {
+	if (size == 1 || same(arr, size, x, y)) {
+		cout << arr[x][y];
+	}
+	else {
+		cout << "(";
+		calc(arr, size / 2, x, y);
+		calc(arr, size / 2, x, y + size / 2);
+		calc(arr, size / 2, x + size / 2, y);
+		calc(arr, size / 2, x + size / 2, y + size / 2);
+		cout << ")";
+	}
+}
+
+int main() {
+	int **arr, size;
+
+	cin >> size;
+
+	arr = (int **)malloc(sizeof(int *)*size);
+	for (int i = 0; i < size; i++) {
+		arr[i] = (int *)malloc(sizeof(int)*size);
+	}
+
+	for (int i = 0; i < size; i++) {
+		for (int j = 0; j < size; j++) {
+			scanf("%1d", &arr[i][j]);
+		}
+	}
+
+	calc(arr, size, 0, 0);
+	
+	return 0;
+}

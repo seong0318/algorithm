@@ -1,0 +1,45 @@
+#include <iostream>
+using namespace std;
+int dp[5][1000];
+int calc(int column_num, int kind) {
+	int result = 0;
+	if (column_num < 0 || (column_num == 1 && kind == 2))
+		return 0;
+	if (column_num == 0 || column_num == 1)
+		return 1;
+	if (dp[kind][column_num])
+		return dp[kind][column_num];
+	switch (kind) {
+	case 0:
+		result += calc(column_num - 1, 3);
+		result += calc(column_num - 1, 4);
+		result += calc(column_num - 2, 0);
+		result += calc(column_num - 1, 1);
+		result += calc(column_num - 1, 0);
+		break;
+	case 1:
+		result += calc(column_num - 1, 0);
+		result += calc(column_num - 1, 4);
+		break;
+	case 2:
+		result += calc(column_num - 1, 3);
+		break;
+	case 3:
+		result += calc(column_num - 1, 0);
+		result += calc(column_num - 1, 2);
+		break;
+	case 4:
+		result += calc(column_num - 1, 0);
+		result += calc(column_num - 1, 1);
+	}
+	dp[kind][column_num] = result;
+	return result;
+}
+int main() {
+	int t, n;
+	cin >> t;
+	while (t--) {
+		cin >> n;
+		cout << calc(n, 0) << endl;
+	}
+}
