@@ -1,0 +1,51 @@
+#include <iostream>
+using namespace std;
+int **arr;
+int result[3] = { 0, };
+bool check_all_same(int start_row, int end_row, int start_col, int end_col) {
+	for (int i = start_row; i < end_row + 1; i++) {
+		for (int j = start_col; j < end_col; j++) {
+			if (i < end_row && j == end_col - 1 && arr[i][j + 1] != arr[i + 1][start_col])
+				return false;			
+			if (arr[i][j] != arr[i][j + 1]) 
+				return false;			
+		}
+	}
+	return true;
+}
+int DQ_calc(int start_row, int end_row, int start_col, int end_col) {
+	int divided_line_size = (end_row - start_row + 1) / 3;
+	if(divided_line_size == 0)
+		return result[arr[start_row][start_col] + 1]++;
+	if (check_all_same(start_row, end_row, start_col, end_col))
+		return result[arr[start_row][start_col] + 1]++;
+	else {
+		DQ_calc(start_row, start_row + divided_line_size - 1, start_col, start_col + divided_line_size - 1);
+		DQ_calc(start_row, start_row + divided_line_size - 1, start_col + divided_line_size, start_col + divided_line_size * 2 - 1);
+		DQ_calc(start_row, start_row + divided_line_size - 1, start_col + divided_line_size * 2, end_col);
+		DQ_calc(start_row + divided_line_size, start_row + divided_line_size * 2 - 1, start_col, start_col + divided_line_size - 1);
+		DQ_calc(start_row + divided_line_size, start_row + divided_line_size * 2 - 1, start_col + divided_line_size, start_col + divided_line_size * 2 - 1);
+		DQ_calc(start_row + divided_line_size, start_row + divided_line_size * 2 - 1, start_col + divided_line_size * 2, end_col);
+		DQ_calc(start_row + divided_line_size * 2, end_row, start_col, start_col + divided_line_size - 1);
+		DQ_calc(start_row + divided_line_size * 2, end_row, start_col + divided_line_size, start_col + divided_line_size * 2 - 1);
+		DQ_calc(start_row + divided_line_size * 2, end_row, start_col + divided_line_size * 2, end_col);
+	}
+}
+int main() {
+	int line;
+	cin >> line;
+	arr = (int**)malloc(sizeof(int*)*line);
+	for (int i = 0; i < line; i++)
+		arr[i] = (int*)malloc(sizeof(int)*line);
+	for (int i = 0; i < line; i++) {
+		for (int j = 0; j < line; j++)
+			cin >> arr[i][j];
+	}
+	DQ_calc(0, line - 1, 0, line - 1);
+	for (int i = 0; i < 3; i++)
+		cout << result[i] << endl;
+
+	for (int i = 0; i < line; i++)
+		free(arr[i]);
+	free(arr);
+}
